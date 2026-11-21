@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ImmuneVault console</title>
+<style>
+  :root { --bg:#f7f7f4; --fg:#1d1d1b; --mut:#6b6b66; --card:#fff; --line:#e3e3de; --good:#1f7a4d; --warn:#9a6700; --bad:#b42318; --acc:#2f4bd8; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --fg:#ececea; --mut:#9b9b96; --card:#1e1e1c; --line:#2f2f2c; --good:#4cc38a; --warn:#e3b341; --bad:#ff7b72; --acc:#8ea2ff; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1000px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; } h2 { font-size: 15px; margin: 0 0 8px; text-transform: uppercase; letter-spacing: .06em; color: var(--mut); }
+  .sub { color: var(--mut); margin: 0 0 20px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 12px; }
+  .card { background: var(--card); border:1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .pill { display:inline-block; padding: 1px 10px; border-radius: 99px; font-weight: 600; font-size: 13px; }
+  .pill.good { background: color-mix(in srgb, var(--good) 15%, transparent); color: var(--good); }
+  .pill.warn { background: color-mix(in srgb, var(--warn) 15%, transparent); color: var(--warn); }
+  .pill.bad { background: color-mix(in srgb, var(--bad) 15%, transparent); color: var(--bad); }
+  .ok { color: var(--good); } .ko { color: var(--bad); }
+  a { color: var(--acc); } code { font-size: 13px; }
+  button { font: inherit; padding: 4px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
+  button:hover { border-color: var(--acc); }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.bad td:nth-child(5) { color: var(--bad); font-weight: 600; } tr.warn td:nth-child(5) { color: var(--warn); font-weight: 600; }
+  #status { color: var(--mut); font-size: 13px; }
+  #vault { overflow-wrap: anywhere; }
+  ul { margin: 0; padding-left: 18px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>ImmuneVault</h1>
+  <p class="sub">An AI agent pays in tUSD8 on QDay Aevum. The vault decides; every act is sealed with ML-DSA-65 and chained on-chain. Vault <span id="vault">…</span></p>
+  <div class="grid">
+    <div class="card"><h2>Self · agent session</h2><p><span id="agentState" class="pill">…</span></p><p id="caps"></p><p>PQ key: <span id="pqkey">…</span></p>
+      <button data-a="revoke">Revoke now</button> <button data-a="pardon">Pardon</button></div>
+    <div class="card"><h2>State · funds</h2><p id="funds">…</p><h2>Held for human review</h2><ul id="held"><li>…</li></ul></div>
+  </div>
+  <div class="card">
+    <h2>Acts · on-chain journal</h2>
+    <p id="head">…</p>
+    <div class="scroll"><table id="journal"><thead><tr><th>#</th><th>Kind</th><th>To</th><th>tUSD8</th><th>Vault answer</th><th>Seal (checked here)</th><th>Tx</th></tr></thead><tbody></tbody></table></div>
+    <p><button data-a="refresh">Refresh</button> <span id="status"></span></p>
+  </div>
+</main>
+<script src="app.bundle.js"></script>
+</body>
+</html>

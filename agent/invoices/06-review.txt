@@ -1,0 +1,3 @@
+INVOICE INV-106 — Acme Cloud (supplier)
+Service: annual support plan (first instalment)
+Pay: 0.08 tUSD8 to supplier

@@ -1,0 +1,21 @@
+{
+  "name": "antitout-aevum-agent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@noble/hashes": "^2.4.0",
+    "@noble/post-quantum": "^0.7.1",
+    "viem": "^2.58.4"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
+}

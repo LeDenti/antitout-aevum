@@ -1,0 +1,3 @@
+INVOICE INV-103 — Acme Cloud (supplier)
+Service: dedicated GPU node, December reservation
+Pay: 0.12 tUSD8 to supplier

@@ -1,0 +1,3 @@
+WORK ORDER INV-108 — freelancer
+Translation of the README, express.
+Escrow: 0.04 tUSD8 to freelancer until delivery of the translation, deadline 90 s, condition sha256:0x3372e57e0c35ad58cf8a376691b92e6cacce205470fccb9c9cac86fce9a52949

@@ -1,0 +1,3 @@
+INVOICE INV-109 — Acme Cloud (supplier)
+Service: batch inference credits
+Pay: 0.06 tUSD8 to supplier

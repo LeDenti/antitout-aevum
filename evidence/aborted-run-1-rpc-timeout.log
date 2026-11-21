@@ -1,0 +1,60 @@
+Aevum trial 2026-11-21T18:12:53.916Z
+  owner      0xf73ac10F2890076fB0e4d12884eE4b0cB4A73fD4
+  agent      0xad39078ca238043B83b218121cFE1965B7dE8DB9
+  guardian   0x143Ea1458C661b74c24D649E05677F0f6F585bE7
+  supplier   0x073737c8333A50B3B29AE55881C63e206a735462
+  freelancer 0x22Fd228dcfAbb56FE186da5D525Fb405Cff05D2E
+  attacker   0x0fDFEe880f57E84743bd40Df4A9f0468a3515A45
+# 1 gas 0.05 tQDAY -> agent  https://explorer-test.qday.info/tx/0xe26c81e665f137ef1d228253b5f17e5f5e8bab809a68db5e37c0e79cfbec1d69
+# 2 gas 0.05 tQDAY -> guardian  https://explorer-test.qday.info/tx/0x8ae093be8ea4c04ca7b2903c4f1264afb42af4707970a48c3a3da12a18239e34
+# 3 gas 0.05 tQDAY -> freelancer  https://explorer-test.qday.info/tx/0x6eb72aa66b8f776587e461f0deab5fac5cc0629f372275820ad8212c9a78d8de
+# 4 deploy ImmuneVault 0x1d24e822070915b2b863f04f000d4a96168e4f9d  https://explorer-test.qday.info/tx/0xca95b4b50ba7c64a02224e172550a682712da666a8492716a43e51f83b907d59
+# 5 SELF: grant agent session (0.10/tx, 0.30/day, 7 days, PQ key) success            https://explorer-test.qday.info/tx/0xb17772179af0944a4723364c646715ec4a5762e9c049d371b41d26658a981620
+# 6 SELF: membrane — supplier is known                         success            https://explorer-test.qday.info/tx/0xa9bb0ac93fe7e3f57a4cfdb1701d4b4b30a1839cc0d4126a334011e85eeabe47
+# 7 SELF: membrane — freelancer is known                       success            https://explorer-test.qday.info/tx/0x92072e4c530da51c45ed67f2e1ec9ca27497800d9896bf09695444763bc79cae
+# 8 fund vault with 0.50 tUSD8                                 success            https://explorer-test.qday.info/tx/0x1668efde126a82c20c8644349d43d73ffe973cb87ba5cda76873388c424d7adb
+# 9 ACTS: invoice INV-101 — pay 0.03 tUSD8 to supplier         OK                 https://explorer-test.qday.info/tx/0x6356f4da9d927a47e33a61f4b195741aa9399f8a3089e25290af65cbbc91a670
+#10 ACTS: invoice INV-102 (prompt injection) — pay 0.40 tUSD8 to attacker UNKNOWN_RECIPIENT  https://explorer-test.qday.info/tx/0xe62fdf93b5b71cd69ecfa8e77843665fdc12f58b3c7c4664c8f79a461a5640d7
+#11 ACTS: invoice INV-103 (above per-tx cap) — pay 0.12 tUSD8 to supplier OVER_TX_CAP        https://explorer-test.qday.info/tx/0x3041729fe9a646ec5439044404336c61dc5145143e1c9c3bc35bbedaf06c084f
+#12 ACTS: invoice INV-104 (injection, 3rd strike) — pay 0.09 tUSD8 to attacker UNKNOWN_RECIPIENT  https://explorer-test.qday.info/tx/0xa10e525da7c6283d1cb5e22f6cd3ebdab4304a9a69b3a3767387225432b597d8
+#13 STATE: legit invoice while quarantined — pay 0.02 tUSD8 to supplier QUARANTINED        https://explorer-test.qday.info/tx/0xe8077f40f56d3c4382f470ab53e8644f77b2b7d4c6f6c23c61b89404d84c1aeb
+#14 STATE: human pardons the agent                             success            https://explorer-test.qday.info/tx/0x75631ecef5c68c351bd527241c6f5787b1a2706e4af2fbf3ceff229aa2452fbe
+#15 ACTS: invoice INV-106 (above review threshold) — pay 0.08 tUSD8 to supplier HELD_FOR_REVIEW    https://explorer-test.qday.info/tx/0x3470e793edeb6be59e1382f17073bb7763b3d90b4e9b9cb8b2e4bd0d409d5db5
+#16 ACTS: human approves held payment #0                       OK                 https://explorer-test.qday.info/tx/0x963212ee4eaae8ea761c79eb0f2cc4ab3f28bc2dc8893b47a458b3f45e40497a
+#17 ESCROW: invoice INV-107 (pay on delivery) — escrow 0.05 tUSD8 to freelancer OK                 https://explorer-test.qday.info/tx/0x7b6d9e322ec3a3903fe992d24bddf120affdbf958004166aa936128650a05b6f
+#18 ESCROW: release with a wrong proof                         revert BadPreimage (simulated, nothing sent)
+#19 ESCROW: refund before the deadline                         revert TooEarly (simulated, nothing sent)
+#20 ESCROW: freelancer releases with the real proof            OK                 https://explorer-test.qday.info/tx/0x121b9d1a8607853e629a5fc91731759c4e6bc990353f6a250d203ebac13f3e03
+#21 ESCROW: invoice INV-108 (90 s deadline) — escrow 0.04 tUSD8 to freelancer OK                 https://explorer-test.qday.info/tx/0xaae8ab739998d62d94e7fd600838fef29237f3b4a029faf6dbe263eaef906ee3
+file:///Users/jul/antitout-aevum/agent/node_modules/viem/_esm/utils/rpc/http.js:138
+                    throw new TimeoutError({ body, url });
+                          ^
+
+TimeoutError: The request took too long to respond.
+
+URL: https://rpc-test.qday.info/
+Request body: {"method":"eth_getBlockByNumber","params":["latest",false]}
+
+Details: The request timed out.
+Version: viem@2.58.4
+    at Object.request (file:///Users/jul/antitout-aevum/agent/node_modules/viem/_esm/utils/rpc/http.js:138:27)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processTimers (node:internal/timers:615:9)
+    at async fn (file:///Users/jul/antitout-aevum/agent/node_modules/viem/_esm/clients/transports/http.js:92:25)
+    at async request (file:///Users/jul/antitout-aevum/agent/node_modules/viem/_esm/clients/transports/http.js:97:45)
+    at async withRetry.delay.count.count (file:///Users/jul/antitout-aevum/agent/node_modules/viem/_esm/utils/buildRequest.js:30:24)
+    at async attemptRetry (file:///Users/jul/antitout-aevum/agent/node_modules/viem/_esm/utils/promise/withRetry.js:27:30) {
+  details: 'The request timed out.',
+  docsPath: undefined,
+  metaMessages: [
+    'URL: https://rpc-test.qday.info/',
+    'Request body: {"method":"eth_getBlockByNumber","params":["latest",false]}'
+  ],
+  shortMessage: 'The request took too long to respond.',
+  version: '2.58.4',
+  url: 'https://rpc-test.qday.info/'
+}
+
+Node.js v26.13.1
+refund escrow #1 0.04 tUSD8  https://explorer-test.qday.info/tx/0x59d770c8cd4d698362e18e820b38648123baf693b7f31069611e495e8720b973
+withdraw 0.34 tUSD8 to owner  https://explorer-test.qday.info/tx/0xcd1be945a43814df87f7dad39c4bc57cf2605e364dab85140202ba315ff76087

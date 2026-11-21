@@ -1,0 +1,14 @@
+{
+  "chainId": 44005,
+  "vault": "0x4122869db62e124ecdc5a958ace83059f8818cbd",
+  "fromBlock": 3768301,
+  "tUSD8": "0x456569838f1d43009A91ebA4263147Afd7233483",
+  "addresses": {
+    "owner": "0xf73ac10F2890076fB0e4d12884eE4b0cB4A73fD4",
+    "agent": "0xad39078ca238043B83b218121cFE1965B7dE8DB9",
+    "guardian": "0x143Ea1458C661b74c24D649E05677F0f6F585bE7",
+    "supplier": "0x073737c8333A50B3B29AE55881C63e206a735462",
+    "freelancer": "0x22Fd228dcfAbb56FE186da5D525Fb405Cff05D2E",
+    "attacker": "0x0fDFEe880f57E84743bd40Df4A9f0468a3515A45"
+  }
+}

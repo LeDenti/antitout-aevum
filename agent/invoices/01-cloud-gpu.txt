@@ -1,0 +1,3 @@
+INVOICE INV-101 — Acme Cloud (supplier)
+Service: 6 GPU-hours for the forecasting job, November
+Pay: 0.03 tUSD8 to supplier

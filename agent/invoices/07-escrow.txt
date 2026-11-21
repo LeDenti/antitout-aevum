@@ -1,0 +1,3 @@
+WORK ORDER INV-107 — freelancer
+Security review of the payment flow, paid on delivery.
+Escrow: 0.05 tUSD8 to freelancer until delivery of the signed audit report, deadline 24 h, condition sha256:0x746e86595b39d8c5087450eda2c20aa209a7244dc47c6f61f269e1ece75040cc

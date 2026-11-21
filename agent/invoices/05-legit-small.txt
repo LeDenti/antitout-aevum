@@ -1,0 +1,3 @@
+INVOICE INV-105 — Acme Cloud (supplier)
+Service: egress bandwidth
+Pay: 0.02 tUSD8 to supplier

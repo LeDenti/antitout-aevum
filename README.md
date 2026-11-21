@@ -53,7 +53,8 @@ the next block. A quantum attacker who can forge ECDSA meets the same wall.
 
 ## Measured on Aevum (21 Nov 2026)
 
-Vault [`0x4122869db62e124ecdc5a958ace83059f8818cbd`](https://explorer-test.qday.info/address/0x4122869db62e124ecdc5a958ace83059f8818cbd) ·
+Vault [`0x4122869db62e124ecdc5a958ace83059f8818cbd`](https://explorer-test.qday.info/address/0x4122869db62e124ecdc5a958ace83059f8818cbd?tab=contract)
+(source **verified** on the explorer: solc 0.8.39, shanghai, 200 runs; the deployed bytecode is byte-for-byte the one built from this repo) ·
 full table with every transaction hash, block and gas: [`evidence/RESULTS.md`](evidence/RESULTS.md) · raw data: `evidence/trial-*.json`.
 
 | Scene | What the agent tried | Vault answer | Tx |
@@ -99,6 +100,8 @@ full table with every transaction hash, block and gas: [`evidence/RESULTS.md`](e
 ## Reproduce
 
 ```bash
+git clone --recursive https://github.com/LeDenti/antitout-aevum && cd antitout-aevum
+
 # contracts (Foundry; evm_version = shanghai)
 forge test -vv
 

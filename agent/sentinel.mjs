@@ -4,20 +4,20 @@
 // This is the off-chain half of a hybrid check (ECDSA on-chain + ML-DSA-65 seal),
 // until QDay Phase 2 ships its ML-DSA-65 precompile and `payVerified` takes over.
 //   node sentinel.mjs <vault> [--once] [--from <block>]
-import { encodeAbiParameters, keccak256, parseAbiItem } from "viem";
+import { encodeAbiParameters, keccak256 } from "viem";
 import { publicClient, wallet, artifact, verifySeal, pqKeys, CODES, KINDS, explorerTx } from "./common.mjs";
+import { readActs } from "./acts.mjs";
 
-const ACT = parseAbiItem(
-  "event Act(uint256 indexed index, uint8 indexed kind, address indexed agent, address to, uint256 amount, uint8 code, bytes32 seal, uint256 ref, bytes32 head)",
-);
+const blockTimes = new Map(); // block number -> timestamp, kept across scans in watch mode
+// the explorer index only describes the public Aevum chain: with a custom RPC (a local fork), read the RPC alone
+const EXPLORER_API = process.env.AEVUM_EXPLORER ?? (process.env.AEVUM_RPC ? null : undefined);
 
 export async function scan(vault, { fromBlock = 0n, act = true, log = console.log } = {}) {
   const { abi } = artifact();
-  const logs = await getLogsChunked(vault, fromBlock);
+  const { logs } = await readActs(publicClient, vault, { fromBlock, explorer: EXPLORER_API });
   const { publicKey } = pqKeys();
   let head = "0x" + "00".repeat(32);
   const findings = [];
-  const blockTimes = new Map();
   for (const l of logs) {
     const a = l.args;
     // 1. journal integrity: recompute the head exactly as the contract does
@@ -53,17 +53,6 @@ export async function scan(vault, { fromBlock = 0n, act = true, log = console.lo
     frozen.push({ agent: f.agent, hash, block: r.blockNumber, act: f });
   }
   return { acts: logs.length, headOk, findings, frozen };
-}
-
-async function getLogsChunked(address, fromBlock) {
-  const latest = await publicClient.getBlockNumber({ cacheTime: 0 }); // viem caches it 4 s otherwise
-  const out = [];
-  const step = 9_000n;
-  for (let b = fromBlock; b <= latest; b += step + 1n) {
-    const to = b + step > latest ? latest : b + step;
-    out.push(...(await publicClient.getLogs({ address, event: ACT, fromBlock: b, toBlock: to })));
-  }
-  return out.sort((x, y) => (x.args.index < y.args.index ? -1 : 1));
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

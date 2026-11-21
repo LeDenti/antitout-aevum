@@ -3,6 +3,7 @@
 // approve or reject held payments.
 import { createPublicClient, createWalletClient, custom, http, defineChain, parseAbiItem, keccak256, concat, encodeAbiParameters } from "viem";
 import { ml_dsa65 } from "@noble/post-quantum/ml-dsa.js";
+import { ACT, readActs } from "../agent/acts.mjs";
 
 const aevum = defineChain({
   id: 44005, name: "QDay Aevum Testnet",
@@ -11,10 +12,12 @@ const aevum = defineChain({
   blockExplorers: { default: { name: "Aevum Explorer", url: "https://explorer-test.qday.info" } },
 });
 const EXP = aevum.blockExplorers.default.url;
-const DATA = new URLSearchParams(location.search).get("data") || "../evidence/";
+const Q = new URLSearchParams(location.search);
+const DATA = Q.get("data") || "../evidence/";
+// history from the explorer index (the public RPC serves 1,000 blocks per log query); not with a custom RPC
+const EXPLORER_API = Q.get("explorer") ?? (Q.get("rpc") ? null : EXP);
 const CODES = ["OK", "REVOKED", "EXPIRED", "QUARANTINED", "OVER_TX_CAP", "OVER_DAILY_CAP", "UNKNOWN_RECIPIENT", "INSUFFICIENT_FUNDS", "HELD_FOR_REVIEW", "MISSING_SEAL", "BAD_ESCROW_TERMS"];
 const KINDS = { 1: "pay", 2: "lock", 3: "release", 4: "refund", 5: "approve", 6: "reject" };
-const ACT = parseAbiItem("event Act(uint256 indexed index, uint8 indexed kind, address indexed agent, address to, uint256 amount, uint8 code, bytes32 seal, uint256 ref, bytes32 head)");
 const abi = [
   ACT,
   ...["function journalHead() view returns (bytes32)", "function actCount() view returns (uint256)", "function lockedTotal() view returns (uint256)",
@@ -68,12 +71,7 @@ async function refresh() {
   $("#held").innerHTML = rows.join("") || "<li>none</li>";
 
   // journal + seals
-  const latest = await client.getBlockNumber({ cacheTime: 0 });
-  const logs = [];
-  for (let b = BigInt(dep.fromBlock); b <= latest; b += 9001n) {
-    logs.push(...(await client.getLogs({ address: v, event: ACT, fromBlock: b, toBlock: b + 9000n > latest ? latest : b + 9000n })));
-  }
-  logs.sort((x, y) => (x.args.index < y.args.index ? -1 : 1));
+  const { logs, latest } = await readActs(client, v, { fromBlock: BigInt(dep.fromBlock), explorer: EXPLORER_API });
   let replay = "0x" + "00".repeat(32);
   // block timestamps and seal checks in parallel, the replay itself stays sequential
   $("#status").textContent = `reading ${logs.length} acts…`;

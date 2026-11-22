@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ImmuneVault sandbox</title>
+<style>
+  :root { --bg:#f7f7f4; --fg:#1d1d1b; --mut:#6b6b66; --card:#fff; --line:#e3e3de; --good:#1f7a4d; --warn:#9a6700; --bad:#b42318; --acc:#2f4bd8; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --fg:#ececea; --mut:#9b9b96; --card:#1e1e1c; --line:#2f2f2c; --good:#4cc38a; --warn:#e3b341; --bad:#ff7b72; --acc:#8ea2ff; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1000px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; } h2 { font-size: 15px; margin: 0 0 8px; text-transform: uppercase; letter-spacing: .06em; color: var(--mut); }
+  .sub { color: var(--mut); margin: 0 0 20px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin-bottom: 12px; }
+  .card { background: var(--card); border:1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+  textarea { width: 100%; min-height: 190px; font: 13px/1.45 ui-monospace, Menlo, monospace; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); resize: vertical; }
+  select { max-width: 100%; } .row > * { min-width: 0; }
+  select, button { font: inherit; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+  button { cursor: pointer; } button:hover:not(:disabled) { border-color: var(--acc); } button:disabled { opacity: .5; cursor: default; }
+  button.go { background: var(--acc); border-color: var(--acc); color: #fff; font-weight: 600; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
+  .chips button { font-size: 13px; padding: 3px 10px; border-radius: 99px; }
+  .pill { display:inline-block; padding: 1px 10px; border-radius: 99px; font-weight: 600; font-size: 13px; }
+  .good { color: var(--good); } .warn { color: var(--warn); } .bad { color: var(--bad); }
+  .pill.good { background: color-mix(in srgb, var(--good) 15%, transparent); } .pill.warn { background: color-mix(in srgb, var(--warn) 15%, transparent); } .pill.bad { background: color-mix(in srgb, var(--bad) 15%, transparent); }
+  ol.steps { margin: 0; padding-left: 20px; } ol.steps li { margin-bottom: 10px; overflow-wrap: anywhere; }
+  .big { font-size: 20px; font-weight: 700; }
+  a { color: var(--acc); } code { font-size: 13px; overflow-wrap: anywhere; }
+  .mut { color: var(--mut); font-size: 13px; }
+  .scroll { overflow-x: auto; } table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+</style>
+</head>
+<body>
+<main>
+  <h1>ImmuneVault sandbox</h1>
+  <p class="sub">Write an invoice, booby-trapped or not, and hand it to a throwaway AI agent. The agent decides; the vault answers on QDay Aevum testnet, in a real transaction. No wallet needed. <a href="./">Back to the console</a></p>
+  <div class="grid">
+    <div class="card">
+      <h2>1 · The invoice the agent reads</h2>
+      <div class="row chips" id="examples"></div>
+      <textarea id="invoice" maxlength="2000" spellcheck="false" aria-label="Invoice text"></textarea>
+      <p class="mut">Known payees: <code>supplier</code>, <code>freelancer</code>. Write <code>ATTACKER_ADDRESS</code> for an address outside the vault's membrane, or any <code>0x…</code> address. Amounts in tUSD8; the cap is 0.02 per payment.</p>
+      <div class="row">
+        <label for="brain">Agent brain</label>
+        <select id="brain"><option value="naive">Naive parser (obeys the last “Pay:” line)</option></select>
+        <button class="go" id="go">Hand it to the agent</button>
+      </div>
+      <p class="mut" id="relayer">Contacting the relayer…</p>
+    </div>
+    <div class="card">
+      <h2>2 · What happened</h2>
+      <div id="result"><p class="mut">Nothing yet. Pick an example on the left, or write your own invoice, then hand it to the agent.</p></div>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card"><h2>The sandbox agent, read from Aevum</h2><p><span id="state" class="pill">…</span></p><p id="health">…</p><p class="mut" id="vault"></p></div>
+    <div class="card"><h2>How it is wired</h2>
+      <p class="mut">A small relayer holds the keys of this one agent (an ECDSA session key and an ML-DSA-65 key). It seals the agent's decision and sends it; it cannot do more than the vault lets this agent do: 0.02 tUSD8 per payment, 0.10 per day, two known payees. Three refused acts put the agent in quarantine for two minutes. The seal is checked here, in your browser, against the key hash the owner registered on-chain.</p></div>
+  </div>
+  <div class="card">
+    <h2>Latest acts of this vault (on-chain journal)</h2>
+    <div class="scroll"><table id="journal"><thead><tr><th>#</th><th>To</th><th>tUSD8</th><th>Vault answer</th><th>Tx</th></tr></thead><tbody></tbody></table></div>
+    <p class="mut" id="status"></p>
+  </div>
+</main>
+<script src="sandbox.bundle.js"></script>
+</body>
+</html>

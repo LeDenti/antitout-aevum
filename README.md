@@ -59,7 +59,8 @@ the next block. A quantum attacker who can forge ECDSA meets the same wall.
 ## Measured on Aevum (21 Nov 2026)
 
 Vault [`0x4122869db62e124ecdc5a958ace83059f8818cbd`](https://explorer-test.qday.info/address/0x4122869db62e124ecdc5a958ace83059f8818cbd?tab=contract)
-(source **verified** on the explorer: solc 0.8.39, shanghai, 200 runs; the deployed bytecode is byte-for-byte the one built from this repo) ·
+(source **verified** on the explorer: solc 0.8.39, shanghai, 200 runs; the deployed bytecode is byte-for-byte the one built from this repo,
+contract unchanged since commit [`72b6dd1`](https://github.com/LeDenti/antitout-aevum/commit/72b6dd1)) ·
 full table with every transaction hash, block and gas: [`evidence/RESULTS.md`](evidence/RESULTS.md) · raw data: `evidence/trial-*.json`.
 
 | Scene | What the agent tried | Vault answer | Tx |
@@ -197,8 +198,10 @@ The bench of 22 Nov cost USD 0.83 of API credit; `node bench.mjs --mock` tests t
   and `MCOPY` are rejected (`invalid opcode`), so contracts are compiled with `evm_version = "shanghai"`.
 * No ML-DSA-65 precompile on the testnet yet (QDay docs: Phase 2). The on-chain PQ path is tested
   with a mock verifier only.
-* EntryPoint / bundler / session-key module addresses for ERC-4337 are not yet published in the docs;
-  the vault implements its own scoped session instead of a 4337 module (see roadmap).
+* Account abstraction: the organizers' starter kit (read 26 Nov 2026) says ERC-4337 is not required, that there is
+  no officially supported bundler or paymaster on Aevum, and that budgets, limits, expiry and revoke should be
+  written into your own contract. That is what the vault does: its scoped session is the contract's own, not a
+  4337 module (see roadmap).
 * The public RPC serves `eth_getLogs` over **1,000 blocks at most** (measured 21 Nov 2026, about one block
   per second). The sentinel and the console therefore read the vault's history from the explorer's log index
   and only the recent tail from the RPC (`agent/acts.mjs`); they never trust the explorer, since they recompute
@@ -215,4 +218,4 @@ The bench of 22 Nov cost USD 0.83 of API credit; `node bench.mjs --mock` tests t
 
 ## License
 
-MIT
+MIT. Third-party licenses are listed in [NOTICE.md](NOTICE.md). ImmuneVault is not based on the Aevum Starter Kit.
